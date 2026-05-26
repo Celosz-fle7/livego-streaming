@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiConstants {
@@ -33,12 +32,14 @@ class ApiConstants {
     } catch (_) {}
   }
 
-  static const String discover   = '/api/v2/discover';
-  static const String video      = '/api/v2/video';
-  static const String search     = '/api/v2/search';
-  static const String categories = '/api/v2/categories';
-  static const String languages  = '/api/v2/languages';
-  static const String detail     = '/api/v2/detail';
-  static const String keyStatus  = '/api/v2/key/status';
-  static const String home       = '/api/v2/home';
+  static const String discover   = '/api/dramas';
+  static const String dramas     = '/api/dramas';
+  static const String video      = '/api/video';
+  static const String search     = '/api/search';
+  static const String categories = '/api/categories';
+  static const String languages  = '/api/languages';
+  static const String detail     = '/api/detail';
+  static const String keyStatus  = '/api/ping';
+  static const String home       = '/api/home';
+  static const String banner     = '/api/banner';
 }
