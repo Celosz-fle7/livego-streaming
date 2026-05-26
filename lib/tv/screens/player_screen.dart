@@ -99,8 +99,7 @@ class _TVPlayerScreenState extends State<TVPlayerScreen> {
     await oldCtrl?.dispose();
 
     // 🔥 KIRIM PARAMETER KUALITAS
-    final quality = _selectedQuality != 'Auto' ? _selectedQuality : null;
-    final data = await DramaRepository.getVideo(widget.id, widget.source, episode: ep, quality: quality);
+    final data = await DramaRepository.getVideo(      widget.id,      widget.source,      episode: ep,    );
     if (!mounted) return;
 
     final url = (data?['video_url'] ?? '').toString();
