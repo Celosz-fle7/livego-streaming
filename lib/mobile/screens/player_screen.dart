@@ -90,8 +90,11 @@ class _MobilePlayerScreenState extends State<MobilePlayerScreen> {
     _controller?.removeListener(_onPlayerUpdate);
     _controller = null;
     await oldCtrl?.dispose();
-    final quality = _selectedQuality != 'Auto' ? _selectedQuality : null;
-    final data = await DramaRepository.getVideo(widget.id, widget.source, episode: ep, quality: quality);
+    final data = await DramaRepository.getVideo(
+      widget.id,
+      widget.source,
+      episode: ep,
+    );
     if (!mounted) return;
     if (data == null) {
       _handleLoadError(ep);
