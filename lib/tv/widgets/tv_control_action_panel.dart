@@ -4,12 +4,14 @@ class TVControlActionPanel extends StatelessWidget {
   final VoidCallback onRestart;
   final VoidCallback onClearCache;
   final VoidCallback onOptimize;
+  final VoidCallback onEmergency;
 
   const TVControlActionPanel({
     super.key,
     required this.onRestart,
     required this.onClearCache,
     required this.onOptimize,
+    required this.onEmergency,
   });
 
   Widget _button(String text, IconData icon, VoidCallback onTap) {
@@ -36,8 +38,9 @@ class TVControlActionPanel extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           _button('Restart System', Icons.restart_alt, onRestart),
-          _button('Clear Cache', Icons.delete_sweep, onClearCache),
-          _button('Optimize', Icons.rocket_launch, onOptimize),
+          _button('Clear Memory', Icons.memory, onClearCache),
+          _button('Optimize Runtime', Icons.rocket_launch, onOptimize),
+          _button('Emergency Mode', Icons.warning_amber, onEmergency),
         ],
       ),
     );
