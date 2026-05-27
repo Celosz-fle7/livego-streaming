@@ -11,7 +11,7 @@ import '../widgets/tv_smart_boot_panel.dart';
 import '../widgets/tv_stability_panel.dart';
 import '../widgets/tv_system_diagnostic_panel.dart';
 import '../widgets/tv_system_health_panel.dart';
-import '../widgets/tv_universal_panel.dart';
+import 'tv_universal_panel.dart';
 
 class TVSystemDashboard extends StatelessWidget {
   const TVSystemDashboard({super.key});
