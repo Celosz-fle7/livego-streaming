@@ -1,14 +1,13 @@
 class TVGPUEngine {
-  static bool hardwareAcceleration =
-      true;
+  static int usage = 20;
 
-  static bool hdrEnabled = false;
+  static int temp = 45;
 
-  static void enableHDR() {
-    hdrEnabled = true;
-  }
-
-  static void disableHDR() {
-    hdrEnabled = false;
+  static void update(
+    int gpu,
+    int temperature,
+  ) {
+    usage = gpu;
+    temp = temperature;
   }
 }
