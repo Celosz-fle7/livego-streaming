@@ -2,43 +2,67 @@ import 'package:flutter/material.dart';
 
 class TVSystemHealthPanel
     extends StatelessWidget {
-  final int score;
+
+  final int fps;
+  final int memory;
   final bool healthy;
 
   const TVSystemHealthPanel({
     super.key,
-    required this.score,
+    required this.fps,
+    required this.memory,
     required this.healthy,
   });
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
-      width: 340,
-      padding: const EdgeInsets.all(20),
+      width: 420,
+      padding:
+          const EdgeInsets.all(24),
+
       decoration: BoxDecoration(
         color: Colors.black87,
         borderRadius:
-            BorderRadius.circular(20),
+            BorderRadius.circular(24),
       ),
+
       child: Column(
         children: [
+
           Icon(
             healthy
-                ? Icons.favorite
+                ? Icons.health_and_safety
                 : Icons.warning,
+
             color:
-                healthy ? Colors.green : Colors.red,
-            size: 52,
+                healthy
+                    ? Colors.green
+                    : Colors.red,
+
+            size: 72,
           ),
-          const SizedBox(height: 18),
+
+          const SizedBox(height: 20),
+
           Text(
-            '$score%',
+            '$fps FPS',
             style: const TextStyle(
               color: Colors.white,
+              fontSize: 34,
               fontWeight:
                   FontWeight.bold,
-              fontSize: 30,
+            ),
+          ),
+
+          const SizedBox(height: 10),
+
+          Text(
+            '$memory MB',
+            style: const TextStyle(
+              color: Colors.white70,
+              fontSize: 24,
             ),
           ),
         ],
