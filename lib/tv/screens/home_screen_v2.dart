@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../../core/dracin/dracin_repository.dart';
+import '../../core/tv/tv_image_cache.dart';
 import '../../core/tv/tv_row_controller.dart';
 
-import '../widgets/tv_poster_card.dart';
 import '../widgets/tv_hero_banner.dart';
 import '../widgets/tv_loading_skeleton.dart';
+import '../widgets/tv_poster_card.dart';
 
 import 'detail_screen_v2.dart';
 import 'player_screen.dart';
@@ -44,6 +45,21 @@ class _TVHomeScreenV2State extends State<TVHomeScreenV2> {
 
     if (!mounted) return;
 
+    await TVImageCache.precacheMany(
+      context,
+      trending,
+    );
+
+    await TVImageCache.precacheMany(
+      context,
+      drama,
+    );
+
+    await TVImageCache.precacheMany(
+      context,
+      short,
+    );
+
     if (trending.isNotEmpty) {
       _hero = trending.first;
     }
@@ -75,18 +91,11 @@ class _TVHomeScreenV2State extends State<TVHomeScreenV2> {
       body: _loading
           ? const TVLoadingSkeleton()
           : CustomScrollView(
-          ? const Center(
-              child: CircularProgressIndicator(
-                color: Color(0xFF04D2FF),
-              ),
-            )
-          : CustomScrollView(
               controller: _scroll,
               slivers: [
                 SliverToBoxAdapter(
                   child: _buildHero(),
                 ),
-
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (_, index) {
@@ -106,7 +115,9 @@ class _TVHomeScreenV2State extends State<TVHomeScreenV2> {
   }
 
   Widget _buildHero() {
-    if (_hero == null) return const SizedBox();
+    if (_hero == null) {
+      return const SizedBox();
+    }
 
     return TVHeroBanner(
       title: _hero!['title'] ?? '',
