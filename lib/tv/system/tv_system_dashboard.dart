@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../boot/tv_boot_status_engine.dart';
@@ -23,10 +25,32 @@ class TVSystemDashboard extends StatefulWidget {
 }
 
 class _TVSystemDashboardState extends State<TVSystemDashboard> {
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _timer = Timer.periodic(
+      const Duration(seconds: 2),
+      (_) {
+        TVLiveStatusController.pulse();
+
+        if (!mounted) return;
+
+        setState(() {});
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    TVLiveStatusController.pulse();
-
     final cacheKeys = TVCacheStats.totalKeys();
 
     return GridView(
