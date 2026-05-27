@@ -4,13 +4,17 @@ import 'package:flutter/material.dart';
 
 import '../boot/tv_boot_status_engine.dart';
 import '../cache/tv_cache_stats.dart';
+import '../control/tv_control_center_engine.dart';
 import '../core/tv_engine_core.dart';
 import '../health/tv_app_health_engine.dart';
 import '../kernel/tv_safe_app_kernel.dart';
+import '../live/tv_live_status_engine.dart';
 import '../metrics/tv_live_metrics_engine.dart';
 import '../runtime/live/tv_live_status_controller.dart';
 import '../stability/tv_app_stabilizer.dart';
+import '../widgets/tv_control_center_panel.dart';
 import '../widgets/tv_live_runtime_panel.dart';
+import '../widgets/tv_live_system_panel.dart';
 import '../widgets/tv_smart_boot_panel.dart';
 import '../widgets/tv_stability_panel.dart';
 import '../widgets/tv_system_diagnostic_panel.dart';
@@ -35,10 +39,7 @@ class _TVSystemDashboardState extends State<TVSystemDashboard> {
       const Duration(seconds: 2),
       (_) {
         TVLiveStatusController.pulse();
-
-        if (!mounted) return;
-
-        setState(() {});
+        if (mounted) setState(() {});
       },
     );
   }
@@ -78,6 +79,16 @@ class _TVSystemDashboardState extends State<TVSystemDashboard> {
         TVStabilityPanel(
           stable: TVAppStabilizer.stable,
           optimizations: TVAppStabilizer.optimizations,
+        ),
+        TVControlCenterPanel(
+          online: TVControlCenterEngine.online,
+          maintenance: TVControlCenterEngine.maintenance,
+          commands: TVControlCenterEngine.commands,
+        ),
+        TVLiveSystemPanel(
+          state: TVLiveStatusEngine.state,
+          users: TVLiveStatusEngine.activeUsers,
+          streams: TVLiveStatusEngine.streams,
         ),
         TVLiveRuntimePanel(
           online: TVLiveStatusController.online,
