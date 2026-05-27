@@ -5,22 +5,19 @@ import 'live_tv_screen.dart';
 import 'profile_screen.dart';
 import 'search_screen_v2.dart';
 import 'settings_screen.dart';
+import 'sports_screen.dart';
+import 'system_screen.dart';
 
 import '../widgets/tv_navigation_bar.dart';
 
-class TVRootShell
-    extends StatefulWidget {
-  const TVRootShell({
-    super.key,
-  });
+class TVRootShell extends StatefulWidget {
+  const TVRootShell({super.key});
 
   @override
-  State<TVRootShell> createState() =>
-      _TVRootShellState();
+  State<TVRootShell> createState() => _TVRootShellState();
 }
 
-class _TVRootShellState
-    extends State<TVRootShell> {
+class _TVRootShellState extends State<TVRootShell> {
   int _index = 0;
 
   late final List<Widget> _pages;
@@ -32,7 +29,9 @@ class _TVRootShellState
     _pages = const [
       TVHomeScreenV2(),
       LiveTVScreen(),
+      TVSportsScreen(),
       TVSearchScreenV2(),
+      TVSystemScreen(),
       TVProfileScreen(),
       TVSettingsScreen(),
     ];
@@ -41,8 +40,7 @@ class _TVRootShellState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:
-          const Color(0xFF070B12),
+      backgroundColor: const Color(0xFF070B12),
       body: Column(
         children: [
           TVNavigationBarWidget(
