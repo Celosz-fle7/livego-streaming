@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../../core/tv/tv_row_controller.dart';
 import '../../core/dracin/dracin_repository.dart';
+import '../../core/tv/tv_row_controller.dart';
+
 import '../widgets/tv_poster_card.dart';
+import '../widgets/tv_hero_banner.dart';
+
 import 'detail_screen_v2.dart';
+import 'player_screen.dart';
 
 class TVHomeScreenV2 extends StatefulWidget {
   const TVHomeScreenV2({super.key});
@@ -18,6 +22,8 @@ class _TVHomeScreenV2State extends State<TVHomeScreenV2> {
   final List<Map<String, dynamic>> _rails = [];
 
   bool _loading = true;
+
+  Map<String, dynamic>? _hero;
 
   @override
   void initState() {
@@ -36,6 +42,10 @@ class _TVHomeScreenV2State extends State<TVHomeScreenV2> {
         await DracinRepository.getTrending('reelshort');
 
     if (!mounted) return;
+
+    if (trending.isNotEmpty) {
+      _hero = trending.first;
+    }
 
     setState(() {
       _rails.addAll([
@@ -67,18 +77,64 @@ class _TVHomeScreenV2State extends State<TVHomeScreenV2> {
                 color: Color(0xFF04D2FF),
               ),
             )
-          : ListView.builder(
+          : CustomScrollView(
               controller: _scroll,
-              itemCount: _rails.length,
-              itemBuilder: (_, index) {
-                final rail = _rails[index];
+              slivers: [
+                SliverToBoxAdapter(
+                  child: _buildHero(),
+                ),
 
-                return _RailSection(
-                  title: rail['title'],
-                  items: rail['items'],
-                );
-              },
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (_, index) {
+                      final rail = _rails[index];
+
+                      return _RailSection(
+                        title: rail['title'],
+                        items: rail['items'],
+                      );
+                    },
+                    childCount: _rails.length,
+                  ),
+                ),
+              ],
             ),
+    );
+  }
+
+  Widget _buildHero() {
+    if (_hero == null) return const SizedBox();
+
+    return TVHeroBanner(
+      title: _hero!['title'] ?? '',
+      image: _hero!['cover'] ?? '',
+      synopsis:
+          _hero!['description'] ??
+          'Drama pilihan terbaik untuk Android TV Indonesia.',
+      onPlay: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => TVPlayerScreen(
+              id: _hero!['id'].toString(),
+              source: _hero!['platform'] ?? 'freereels',
+              title: _hero!['title'] ?? '',
+            ),
+          ),
+        );
+      },
+      onDetail: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => TVDetailScreenV2(
+              id: _hero!['id'].toString(),
+              source: _hero!['platform'] ?? 'freereels',
+              title: _hero!['title'] ?? '',
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -140,7 +196,8 @@ class _RailSectionState extends State<_RailSection> {
                         MaterialPageRoute(
                           builder: (_) => TVDetailScreenV2(
                             id: item['id'].toString(),
-                            source: item['platform'] ?? 'freereels',
+                            source:
+                                item['platform'] ?? 'freereels',
                             title: item['title'] ?? '',
                           ),
                         ),
