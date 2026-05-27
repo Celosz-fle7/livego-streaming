@@ -1,19 +1,15 @@
 class TVBandwidthEngine {
-  static double mbps = 24.5;
+  static double current = 120.0;
 
-  static void update(double value) {
-    mbps = value;
-  }
+  static double peak = 220.0;
 
-  static String get label {
-    if (mbps >= 20) {
-      return 'FAST';
+  static void update(
+    double value,
+  ) {
+    current = value;
+
+    if (value > peak) {
+      peak = value;
     }
-
-    if (mbps >= 8) {
-      return 'MEDIUM';
-    }
-
-    return 'SLOW';
   }
 }
