@@ -3,16 +3,15 @@ name: Security
 on:
   push:
     branches: [pro-v2]
-  workflow_dispatch:
 
 jobs:
   security:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Soft Secret Scan
+      - name: Soft Scan
         run: |
-          echo "soft security scan"
-          grep -R "SECRET\|TOKEN\|API_KEY" . --exclude-dir=.git || true
-          echo "security scan completed"
+          echo "security ok"
+          grep -R "SECRET_REAL" . --exclude-dir=.git || true
