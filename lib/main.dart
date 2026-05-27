@@ -8,7 +8,7 @@ import 'utils/theme.dart';
 import 'mobile/screens/player_screen.dart' as mobile;
 import 'mobile/screens/main_wrapper.dart';
 import 'tv/screens/home_screen.dart';
-import 'tv/screens/mobile/screens/player_screen.dart' as tv;
+import 'tv/screens/player_screen.dart' as tv;
 import 'tv/screens/search_screen.dart';
 import 'tv/screens/favorite_screen.dart';
 import 'tv/screens/history_screen.dart';
@@ -78,7 +78,6 @@ class LiveGOApp extends StatelessWidget {
           return _fade(
             RepaintBoundary(
               child: mobile.PlayerScreen(
-                id: args['id'] ?? '',
                 source: args['source'] ?? '',
                 title: args['title'] ?? '',
               ),
@@ -97,7 +96,6 @@ class LiveGOApp extends StatelessWidget {
         if (args != null) {
           return _fade(
             tv.TVPlayerScreen(
-              id: args['id'] ?? '',
               source: args['source'] ?? '',
               title: args['title'] ?? '',
             ),
