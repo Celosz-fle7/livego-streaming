@@ -1,19 +1,15 @@
 class TVEpisodeMemory {
   static final Map<String, int>
-      _memory = {};
+      episodes = {};
 
   static void save(
-    String dramaId,
-    int episode,
+    String id,
+    int ep,
   ) {
-    _memory[dramaId] = episode;
+    episodes[id] = ep;
   }
 
-  static int get(String dramaId) {
-    return _memory[dramaId] ?? 1;
-  }
-
-  static void clear() {
-    _memory.clear();
+  static int get(String id) {
+    return episodes[id] ?? 1;
   }
 }

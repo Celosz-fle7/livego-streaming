@@ -1,25 +1,16 @@
 class TVResumeEngine {
-  static final Map<String, Map<String, dynamic>>
-      _resume = {};
+  static final Map<String, Duration>
+      positions = {};
 
-  static void save({
-    required String id,
-    required int episode,
-    required double seconds,
-  }) {
-    _resume[id] = {
-      'episode': episode,
-      'seconds': seconds,
-    };
-  }
-
-  static Map<String, dynamic>? get(
+  static void save(
     String id,
+    Duration position,
   ) {
-    return _resume[id];
+    positions[id] = position;
   }
 
-  static void clear() {
-    _resume.clear();
+  static Duration get(String id) {
+    return positions[id] ??
+        Duration.zero;
   }
 }
