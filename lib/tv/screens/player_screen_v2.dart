@@ -157,7 +157,7 @@ class _TVPlayerScreenState extends State<TVPlayerScreen> {
 
         setState(() {
           _position = pos;
-          _duration = dur;
+          _duration = dur.toDouble();
           _playing = ctrl.value.isPlaying;
         });
 
