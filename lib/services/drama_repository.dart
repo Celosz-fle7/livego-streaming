@@ -16,12 +16,14 @@ class PlatformConfig {
   final String id;
   final String name;
   final bool isTvFriendly;
+  final bool hasSearch;
   final List<CategoryConfig> categories;
 
   const PlatformConfig({
     required this.id,
     required this.name,
     this.isTvFriendly = false,
+    this.hasSearch = true,
     this.categories = const [],
   });
 }
