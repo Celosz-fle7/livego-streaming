@@ -1,0 +1,32 @@
+name: Status Report
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - pro-v2
+
+jobs:
+  status:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Branch Status
+        run: |
+          echo "branch ok"
+
+      - name: Workflow Status
+        run: |
+          echo "workflow active"
+          ls .github/workflows
+
+      - name: Git Status
+        run: |
+          git status
+
+      - name: Final Status
+        run: |
+          echo "livego-streaming stable"
+
