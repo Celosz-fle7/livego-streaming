@@ -1,0 +1,27 @@
+name: Runtime Check
+
+on:
+  push:
+    branches:
+      - pro-v2
+
+jobs:
+  runtime:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Runtime Status
+        run: |
+          echo "runtime active"
+
+      - name: System Info
+        run: |
+          uname -a
+          pwd
+          ls
+
+      - name: Finish
+        run: |
+          echo "runtime success"
