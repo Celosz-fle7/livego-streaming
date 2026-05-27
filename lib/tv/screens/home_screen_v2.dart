@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../core/dracin/dracin_repository.dart';
+import '../../core/tv/tv_home_controller.dart';
 import '../../core/tv/tv_image_cache.dart';
 import '../../core/tv/tv_row_controller.dart';
 
@@ -20,75 +20,43 @@ class TVHomeScreenV2 extends StatefulWidget {
 
 class _TVHomeScreenV2State extends State<TVHomeScreenV2> {
   final ScrollController _scroll = ScrollController();
-
-  final List<Map<String, dynamic>> _rails = [];
-
-  bool _loading = true;
-
-  Map<String, dynamic>? _hero;
+  final TVHomeController _controller = TVHomeController();
 
   @override
   void initState() {
     super.initState();
-    _loadRails();
+    _load();
   }
 
-  Future<void> _loadRails() async {
-    final trending =
-        await DracinRepository.getTrending('freereels');
+  @override
+  void dispose() {
+    _scroll.dispose();
+    _controller.dispose();
+    super.dispose();
+  }
 
-    final drama =
-        await DracinRepository.getTrending('dramawave');
-
-    final short =
-        await DracinRepository.getTrending('reelshort');
+  Future<void> _load() async {
+    await _controller.load();
 
     if (!mounted) return;
 
-    await TVImageCache.precacheMany(
-      context,
-      trending,
-    );
-
-    await TVImageCache.precacheMany(
-      context,
-      drama,
-    );
-
-    await TVImageCache.precacheMany(
-      context,
-      short,
-    );
-
-    if (trending.isNotEmpty) {
-      _hero = trending.first;
+    for (final rail in _controller.rails) {
+      await TVImageCache.precacheMany(
+        context,
+        rail.items,
+      );
     }
 
-    setState(() {
-      _rails.addAll([
-        {
-          'title': '🔥 Trending Indonesia',
-          'items': trending,
-        },
-        {
-          'title': '🎬 DramaWave',
-          'items': drama,
-        },
-        {
-          'title': '⚡ ReelShort',
-          'items': short,
-        },
-      ]);
-
-      _loading = false;
-    });
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF070B12),
-      body: _loading
+      body: _controller.loading
           ? const TVLoadingSkeleton()
           : CustomScrollView(
               controller: _scroll,
@@ -99,14 +67,15 @@ class _TVHomeScreenV2State extends State<TVHomeScreenV2> {
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (_, index) {
-                      final rail = _rails[index];
+                      final rail = _controller.rails[index];
 
                       return _RailSection(
-                        title: rail['title'],
-                        items: rail['items'],
+                        title: rail.title,
+                        platform: rail.platform,
+                        items: rail.items,
                       );
                     },
-                    childCount: _rails.length,
+                    childCount: _controller.rails.length,
                   ),
                 ),
               ],
@@ -115,24 +84,26 @@ class _TVHomeScreenV2State extends State<TVHomeScreenV2> {
   }
 
   Widget _buildHero() {
-    if (_hero == null) {
+    final hero = _controller.hero;
+
+    if (hero == null) {
       return const SizedBox();
     }
 
     return TVHeroBanner(
-      title: _hero!['title'] ?? '',
-      image: _hero!['cover'] ?? '',
-      synopsis:
-          _hero!['description'] ??
+      title: hero['title'] ?? '',
+      image: hero['cover'] ?? '',
+      synopsis: hero['synopsis'] ??
+          hero['description'] ??
           'Drama pilihan terbaik untuk Android TV Indonesia.',
       onPlay: () {
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (_) => TVPlayerScreen(
-              id: _hero!['id'].toString(),
-              source: _hero!['platform'] ?? 'freereels',
-              title: _hero!['title'] ?? '',
+              id: hero['id'].toString(),
+              source: hero['platform'] ?? 'freereels',
+              title: hero['title'] ?? '',
             ),
           ),
         );
@@ -142,9 +113,9 @@ class _TVHomeScreenV2State extends State<TVHomeScreenV2> {
           context,
           MaterialPageRoute(
             builder: (_) => TVDetailScreenV2(
-              id: _hero!['id'].toString(),
-              source: _hero!['platform'] ?? 'freereels',
-              title: _hero!['title'] ?? '',
+              id: hero['id'].toString(),
+              source: hero['platform'] ?? 'freereels',
+              title: hero['title'] ?? '',
             ),
           ),
         );
@@ -155,10 +126,12 @@ class _TVHomeScreenV2State extends State<TVHomeScreenV2> {
 
 class _RailSection extends StatefulWidget {
   final String title;
+  final String platform;
   final List items;
 
   const _RailSection({
     required this.title,
+    required this.platform,
     required this.items,
   });
 
@@ -167,7 +140,15 @@ class _RailSection extends StatefulWidget {
 }
 
 class _RailSectionState extends State<_RailSection> {
-  final TVRowController _row = TVRowController();
+  late final TVRowController _row;
+
+  @override
+  void initState() {
+    super.initState();
+    _row = TVRowController(
+      sectionId: widget.title,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -188,35 +169,36 @@ class _RailSectionState extends State<_RailSection> {
                 ),
               ),
             ),
-
             const SizedBox(height: 18),
-
             SizedBox(
               height: 260,
               child: ListView.builder(
+                controller: _row.scrollController,
                 scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 32),
                 itemCount: widget.items.length,
                 itemBuilder: (_, i) {
                   final item = widget.items[i];
 
-                  return TVPosterCard(
-                    index: i,
-                    focusNode: _row.node(i),
-                    title: item['title'] ?? '',
-                    image: item['cover'] ?? '',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => TVDetailScreenV2(
-                            id: item['id'].toString(),
-                            source:
-                                item['platform'] ?? 'freereels',
-                            title: item['title'] ?? '',
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 18),
+                    child: TVPosterCard(
+                      title: item['title'] ?? '',
+                      image: item['cover'] ?? '',
+                      focused: false,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => TVDetailScreenV2(
+                              id: item['id'].toString(),
+                              source: widget.platform,
+                              title: item['title'] ?? '',
+                            ),
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   );
                 },
               ),
