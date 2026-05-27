@@ -1,17 +1,17 @@
 class TVHistoryEngine {
-  static final List<Map<String, dynamic>>
-      _items = [];
+  static final List<String>
+      recent = [];
 
-  static void add(
-    Map<String, dynamic> item,
-  ) {
-    _items.removeWhere(
-      (e) => e['id'] == item['id'],
-    );
+  static void add(String id) {
+    recent.remove(id);
+    recent.insert(0, id);
 
-    _items.insert(0, item);
+    if (recent.length > 50) {
+      recent.removeLast();
+    }
   }
 
-  static List<Map<String, dynamic>>
-      get items => _items;
+  static void clear() {
+    recent.clear();
+  }
 }
