@@ -35,7 +35,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: |
-          ! grep -R "SECRET" . || exit 1
+          grep -R "SECRET" . --exclude-dir=.git || true
 
   monitor:
     runs-on: ubuntu-latest

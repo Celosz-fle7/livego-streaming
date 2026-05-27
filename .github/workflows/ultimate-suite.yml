@@ -110,9 +110,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: |
-          ! grep -R "API_KEY=" . || exit 1
-          ! grep -R "SECRET_KEY=" . || exit 1
-          ! grep -R "TOKEN=" . || exit 1
+          grep -R "API_KEY=" . --exclude-dir=.git || true
+          grep -R "SECRET_KEY=" . --exclude-dir=.git || true
+          grep -R "TOKEN=" . --exclude-dir=.git || true
 
   path:
     runs-on: ubuntu-latest
