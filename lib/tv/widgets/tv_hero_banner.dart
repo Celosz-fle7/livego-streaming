@@ -1,6 +1,7 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 
-class TVHeroBanner extends StatelessWidget {
+class TVHeroBanner extends StatefulWidget {
   final String title;
   final String image;
   final String synopsis;
@@ -17,19 +18,78 @@ class TVHeroBanner extends StatelessWidget {
   });
 
   @override
+  State<TVHeroBanner> createState() => _TVHeroBannerState();
+}
+
+class _TVHeroBannerState extends State<TVHeroBanner>
+    with SingleTickerProviderStateMixin {
+
+  late AnimationController _controller;
+
+  late Animation<double> _scale;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 18),
+    )..repeat(reverse: true);
+
+    _scale = Tween<double>(
+      begin: 1.0,
+      end: 1.08,
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeInOut,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return RepaintBoundary(
       child: SizedBox(
-        height: 360,
+        height: 420,
         width: double.infinity,
         child: Stack(
           fit: StackFit.expand,
           children: [
-            Image.network(
-              image,
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Container(
-                color: const Color(0xFF10131A),
+
+            AnimatedBuilder(
+              animation: _scale,
+              builder: (_, child) {
+                return Transform.scale(
+                  scale: _scale.value,
+                  child: child,
+                );
+              },
+              child: Image.network(
+                widget.image,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) {
+                  return Container(
+                    color: const Color(0xFF10131A),
+                  );
+                },
+              ),
+            ),
+
+            BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: 0.3,
+                sigmaY: 0.3,
+              ),
+              child: Container(
+                color: Colors.black.withOpacity(0.05),
               ),
             ),
 
@@ -61,56 +121,64 @@ class TVHeroBanner extends StatelessWidget {
             ),
 
             Positioned(
-              left: 42,
-              bottom: 54,
-              width: 520,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 38,
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
+              left: 52,
+              bottom: 58,
+              width: 560,
+              child: RepaintBoundary(
+                child: Column(
+                  crossAxisAlignment:
+                      CrossAxisAlignment.start,
+                  children: [
 
-                  const SizedBox(height: 14),
-
-                  Text(
-                    synopsis,
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: Colors.white70,
-                      fontSize: 15,
-                      height: 1.45,
-                    ),
-                  ),
-
-                  const SizedBox(height: 22),
-
-                  Row(
-                    children: [
-                      _HeroButton(
-                        label: 'Putar',
-                        icon: Icons.play_arrow_rounded,
-                        primary: true,
-                        onTap: onPlay,
+                    Text(
+                      widget.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 42,
+                        fontWeight: FontWeight.w900,
+                        height: 1.05,
                       ),
-                      const SizedBox(width: 14),
-                      _HeroButton(
-                        label: 'Detail',
-                        icon: Icons.info_outline_rounded,
-                        primary: false,
-                        onTap: onDetail,
+                    ),
+
+                    const SizedBox(height: 18),
+
+                    Text(
+                      widget.synopsis,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 15,
+                        height: 1.5,
                       ),
-                    ],
-                  ),
-                ],
+                    ),
+
+                    const SizedBox(height: 26),
+
+                    Row(
+                      children: [
+
+                        _HeroButton(
+                          label: 'Putar',
+                          icon: Icons.play_arrow_rounded,
+                          primary: true,
+                          onTap: widget.onPlay,
+                        ),
+
+                        const SizedBox(width: 14),
+
+                        _HeroButton(
+                          label: 'Detail',
+                          icon: Icons.info_outline_rounded,
+                          primary: false,
+                          onTap: widget.onDetail,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -136,8 +204,10 @@ class _HeroButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Focus(
+      autofocus: false,
       child: Builder(
         builder: (context) {
+
           final focused = Focus.of(context).hasFocus;
 
           return GestureDetector(
@@ -148,8 +218,8 @@ class _HeroButton extends StatelessWidget {
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 120),
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 22,
-                  vertical: 12,
+                  horizontal: 24,
+                  vertical: 13,
                 ),
                 decoration: BoxDecoration(
                   color: primary
@@ -164,19 +234,34 @@ class _HeroButton extends StatelessWidget {
                         : Colors.transparent,
                     width: 2,
                   ),
+                  boxShadow: focused
+                      ? [
+                          const BoxShadow(
+                            color: Color(0xFF04D2FF),
+                            blurRadius: 14,
+                          ),
+                        ]
+                      : null,
                 ),
                 child: Row(
                   children: [
+
                     Icon(
                       icon,
-                      color: primary ? Colors.black : Colors.white,
+                      color: primary
+                          ? Colors.black
+                          : Colors.white,
                       size: 22,
                     ),
+
                     const SizedBox(width: 8),
+
                     Text(
                       label,
                       style: TextStyle(
-                        color: primary ? Colors.black : Colors.white,
+                        color: primary
+                            ? Colors.black
+                            : Colors.white,
                         fontSize: 15,
                         fontWeight: FontWeight.w800,
                       ),
