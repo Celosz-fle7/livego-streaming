@@ -2,6 +2,7 @@ import '../boot/tv_boot_status_engine.dart';
 import '../core/tv_engine_core.dart';
 import '../health/tv_app_health_engine.dart';
 import '../kernel/tv_safe_app_kernel.dart';
+import '../live/tv_live_system_timer.dart';
 import '../metrics/tv_live_metrics_engine.dart';
 import '../runtime/live/tv_live_system_loop.dart';
 import '../stability/tv_app_stabilizer.dart';
@@ -40,6 +41,8 @@ class TVSystemInitializer {
     TVAppStabilizer.stabilize();
 
     TVLiveSystemLoop.start();
+
+    TVLiveSystemTimer.start();
 
     TVBootStatusEngine.update(
       newStatus: 'READY',
