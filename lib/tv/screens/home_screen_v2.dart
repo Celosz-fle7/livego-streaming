@@ -1,240 +1,158 @@
 import 'package:flutter/material.dart';
 
-import '../../core/models/tv_home_section.dart';
-import '../../core/tv/tv_focus_manager.dart';
-import '../../core/tv/tv_home_controller.dart';
 import '../../core/tv/tv_row_controller.dart';
-import '../../shared/widgets/tv_poster_card.dart';
+import '../../core/dracin/dracin_repository.dart';
+import '../widgets/tv_poster_card.dart';
+import 'detail_screen_v2.dart';
 
 class TVHomeScreenV2 extends StatefulWidget {
   const TVHomeScreenV2({super.key});
 
   @override
-  State<TVHomeScreenV2> createState() =>
-      _TVHomeScreenV2State();
+  State<TVHomeScreenV2> createState() => _TVHomeScreenV2State();
 }
 
-class _TVHomeScreenV2State
-    extends State<TVHomeScreenV2> {
+class _TVHomeScreenV2State extends State<TVHomeScreenV2> {
+  final ScrollController _scroll = ScrollController();
+
+  final List<Map<String, dynamic>> _rails = [];
 
   bool _loading = true;
-
-  List<TVHomeSection> _sections = [];
-
-  final Map<String, TVRowController>
-      _rows = {};
 
   @override
   void initState() {
     super.initState();
-
-    _load();
+    _loadRails();
   }
 
-  Future<void> _load() async {
+  Future<void> _loadRails() async {
+    final trending =
+        await DracinRepository.getTrending('freereels');
 
-    final data =
-        await TVHomeController
-            .loadHome();
+    final drama =
+        await DracinRepository.getTrending('dramawave');
+
+    final short =
+        await DracinRepository.getTrending('reelshort');
 
     if (!mounted) return;
 
-    for (final s in data) {
-      _rows[s.id] =
-          TVRowController(
-        sectionId: s.id,
-      );
-    }
-
     setState(() {
-      _sections = data;
+      _rails.addAll([
+        {
+          'title': '🔥 Trending Indonesia',
+          'items': trending,
+        },
+        {
+          'title': '🎬 DramaWave',
+          'items': drama,
+        },
+        {
+          'title': '⚡ ReelShort',
+          'items': short,
+        },
+      ]);
+
       _loading = false;
     });
-
-    if (data.isNotEmpty &&
-        data.first.items.isNotEmpty) {
-
-      TVFocusManager.request(
-        '${data.first.id}-0',
-      );
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      backgroundColor:
-          const Color(0xFF0B0F14),
-
+      backgroundColor: const Color(0xFF070B12),
       body: _loading
-          ? _buildLoading()
-          : _buildContent(),
+          ? const Center(
+              child: CircularProgressIndicator(
+                color: Color(0xFF04D2FF),
+              ),
+            )
+          : ListView.builder(
+              controller: _scroll,
+              itemCount: _rails.length,
+              itemBuilder: (_, index) {
+                final rail = _rails[index];
+
+                return _RailSection(
+                  title: rail['title'],
+                  items: rail['items'],
+                );
+              },
+            ),
     );
   }
+}
 
-  Widget _buildLoading() {
+class _RailSection extends StatefulWidget {
+  final String title;
+  final List items;
 
-    return const Center(
-      child: CircularProgressIndicator(
-        color: Color(0xFF04D2FF),
-      ),
-    );
-  }
+  const _RailSection({
+    required this.title,
+    required this.items,
+  });
 
-  Widget _buildContent() {
+  @override
+  State<_RailSection> createState() => _RailSectionState();
+}
 
-    return ListView.builder(
-      padding:
-          const EdgeInsets.only(
-        top: 40,
-        bottom: 60,
-      ),
+class _RailSectionState extends State<_RailSection> {
+  final TVRowController _row = TVRowController();
 
-      itemCount: _sections.length,
-
-      itemBuilder: (_, sectionIndex) {
-
-        final section =
-            _sections[sectionIndex];
-
-        final row =
-            _rows[section.id]!;
-
-        return RepaintBoundary(
-          child: Padding(
-            padding:
-                const EdgeInsets.only(
-              bottom: 40,
+  @override
+  Widget build(BuildContext context) {
+    return RepaintBoundary(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 28),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: Text(
+                widget.title,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
 
-            child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start,
+            const SizedBox(height: 18),
 
-              children: [
+            SizedBox(
+              height: 260,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: widget.items.length,
+                itemBuilder: (_, i) {
+                  final item = widget.items[i];
 
-                // TITLE
-                Padding(
-                  padding:
-                      const EdgeInsets
-                          .symmetric(
-                    horizontal: 32,
-                  ),
-
-                  child: Text(
-                    section.title,
-
-                    style:
-                        const TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight:
-                          FontWeight.bold,
-                    ),
-                  ),
-                ),
-
-                const SizedBox(
-                  height: 20,
-                ),
-
-                // ROW
-                SizedBox(
-                  height: 290,
-
-                  child: ListView.builder(
-                    controller:
-                        row.scrollController,
-
-                    scrollDirection:
-                        Axis.horizontal,
-
-                    padding:
-                        const EdgeInsets
-                            .symmetric(
-                      horizontal: 32,
-                    ),
-
-                    itemCount:
-                        section.items.length,
-
-                    itemBuilder:
-                        (_, index) {
-
-                      final item =
-                          section.items[index];
-
-                      final focusId =
-                          '${section.id}-$index';
-
-                      return Padding(
-                        padding:
-                            const EdgeInsets
-                                .only(
-                          right: 18,
-                        ),
-
-                        child: Focus(
-                          focusNode:
-                              TVFocusManager
-                                  .getNode(
-                            focusId,
-                          ),
-
-                          autofocus:
-                              sectionIndex == 0 &&
-                                  index == 0,
-
-                          onFocusChange:
-                              (focused) {
-
-                            if (focused) {
-
-                              row.setFocus(
-                                index,
-                              );
-
-                              setState(() {});
-                            }
-                          },
-
-                          child: Builder(
-                            builder: (ctx) {
-
-                              final focused =
-                                  Focus.of(
-                                ctx,
-                              ).hasFocus;
-
-                              return TVPosterCard(
-                                title:
-                                    item['title']
-                                            ?.toString() ??
-                                        'No Title',
-
-                                image:
-                                    item['cover']
-                                            ?.toString() ??
-                                        '',
-
-                                focused:
-                                    focused,
-
-                                onTap: () {},
-                              );
-                            },
+                  return TVPosterCard(
+                    index: i,
+                    focusNode: _row.node(i),
+                    title: item['title'] ?? '',
+                    image: item['cover'] ?? '',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => TVDetailScreenV2(
+                            id: item['id'].toString(),
+                            source: item['platform'] ?? 'freereels',
+                            title: item['title'] ?? '',
                           ),
                         ),
                       );
                     },
-                  ),
-                ),
-              ],
+                  );
+                },
+              ),
             ),
-          ),
-        );
-      },
+          ],
+        ),
+      ),
     );
   }
 }
