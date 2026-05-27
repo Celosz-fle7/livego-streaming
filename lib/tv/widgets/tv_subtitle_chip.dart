@@ -14,23 +14,26 @@ class TVSubtitleChip
     return Container(
       padding:
           const EdgeInsets.symmetric(
-        horizontal: 10,
-        vertical: 5,
+        horizontal: 12,
+        vertical: 6,
       ),
       decoration: BoxDecoration(
         color: enabled
-            ? const Color(0xFF04D2FF)
+            ? Colors.white
             : Colors.white12,
         borderRadius:
             BorderRadius.circular(8),
       ),
       child: Text(
-        enabled ? 'SUB ON' : 'SUB OFF',
+        enabled
+            ? 'SUB ON'
+            : 'SUB OFF',
         style: TextStyle(
           color: enabled
               ? Colors.black
-              : Colors.white,
-          fontWeight: FontWeight.bold,
+              : Colors.white70,
+          fontWeight:
+              FontWeight.bold,
         ),
       ),
     );

@@ -14,19 +14,22 @@ class TVQualityChip
     return Container(
       padding:
           const EdgeInsets.symmetric(
-        horizontal: 10,
-        vertical: 5,
+        horizontal: 12,
+        vertical: 6,
       ),
       decoration: BoxDecoration(
-        color: Colors.white12,
+        color: const Color(
+          0xFF04D2FF,
+        ),
         borderRadius:
             BorderRadius.circular(8),
       ),
       child: Text(
         quality,
         style: const TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
+          color: Colors.black,
+          fontWeight:
+              FontWeight.bold,
         ),
       ),
     );
