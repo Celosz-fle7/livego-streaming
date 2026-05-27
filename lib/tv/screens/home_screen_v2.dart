@@ -5,6 +5,7 @@ import '../../core/tv/tv_row_controller.dart';
 
 import '../widgets/tv_poster_card.dart';
 import '../widgets/tv_hero_banner.dart';
+import '../widgets/tv_loading_skeleton.dart';
 
 import 'detail_screen_v2.dart';
 import 'player_screen.dart';
@@ -72,6 +73,8 @@ class _TVHomeScreenV2State extends State<TVHomeScreenV2> {
     return Scaffold(
       backgroundColor: const Color(0xFF070B12),
       body: _loading
+          ? const TVLoadingSkeleton()
+          : CustomScrollView(
           ? const Center(
               child: CircularProgressIndicator(
                 color: Color(0xFF04D2FF),
