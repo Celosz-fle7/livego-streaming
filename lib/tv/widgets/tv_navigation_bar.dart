@@ -15,6 +15,8 @@ class TVNavigationBarWidget
   Widget build(BuildContext context) {
     final items = [
       'Home',
+      'Live TV',
+      'Sports',
       'Search',
       'Profile',
       'Settings',
@@ -34,50 +36,51 @@ class TVNavigationBarWidget
           ),
         ),
       ),
-      child: Row(
-        children: List.generate(
-          items.length,
-          (i) {
-            final active =
-                i == currentIndex;
+      child: ListView.separated(
+        scrollDirection:
+            Axis.horizontal,
+        itemCount: items.length,
+        separatorBuilder:
+            (_, __) =>
+                const SizedBox(
+          width: 14,
+        ),
+        itemBuilder: (_, i) {
+          final active =
+              i == currentIndex;
 
-            return GestureDetector(
-              onTap: () => onSelect(i),
-              child: Container(
-                margin:
-                    const EdgeInsets.only(
-                  right: 16,
-                ),
-                padding:
-                    const EdgeInsets.symmetric(
-                  horizontal: 18,
-                  vertical: 10,
-                ),
-                decoration: BoxDecoration(
-                  color: active
-                      ? const Color(
-                          0xFF04D2FF,
-                        )
-                      : Colors.transparent,
-                  borderRadius:
-                      BorderRadius.circular(
-                    10,
-                  ),
-                ),
-                child: Text(
-                  items[i],
-                  style: TextStyle(
-                    color: active
-                        ? Colors.black
-                        : Colors.white,
-                    fontWeight:
-                        FontWeight.bold,
-                  ),
+          return GestureDetector(
+            onTap: () => onSelect(i),
+            child: Container(
+              padding:
+                  const EdgeInsets.symmetric(
+                horizontal: 18,
+                vertical: 10,
+              ),
+              decoration: BoxDecoration(
+                color: active
+                    ? const Color(
+                        0xFF04D2FF,
+                      )
+                    : Colors.transparent,
+                borderRadius:
+                    BorderRadius.circular(
+                  10,
                 ),
               ),
-            );
-          },
-        ),
+              child: Text(
+                items[i],
+                style: TextStyle(
+                  color: active
+                      ? Colors.black
+                      : Colors.white,
+                  fontWeight:
+                      FontWeight.bold,
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
