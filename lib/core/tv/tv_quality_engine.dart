@@ -1,20 +1,19 @@
 class TVQualityEngine {
-  static const qualities = [
-    'Auto',
-    '380p',
-    '480p',
-    '560p',
-    '720p',
-    '1080p',
+  static final List<String>
+      qualities = [
+    '360P',
+    '480P',
+    '720P',
+    '1080P',
+    '4K',
   ];
 
-  static int next(int current) {
-    current++;
+  static String current =
+      '1080P';
 
-    if (current >= qualities.length) {
-      current = 0;
-    }
-
-    return current;
+  static void setQuality(
+    String value,
+  ) {
+    current = value;
   }
 }
