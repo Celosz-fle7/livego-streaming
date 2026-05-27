@@ -1,4 +1,5 @@
 import '../ai/tv_ai_auto_loop.dart';
+import '../core/tv_low_memory_mode.dart';
 import '../live/tv_auto_system_events.dart';
 import '../live/tv_live_system_timer.dart';
 import '../monitor/tv_auto_monitor_timer.dart';
@@ -12,10 +13,16 @@ class TVSystemRuntimeController {
     active = true;
 
     TVLiveSystemLoop.start();
-    TVLiveSystemTimer.start();
-    TVAutoSystemEvents.start();
+
+    if (!TVLowMemoryMode.enabled) {
+      TVLiveSystemTimer.start();
+      TVAutoSystemEvents.start();
+      TVAutoMonitorTimer.start();
+      TVAIAutoLoop.start();
+      return;
+    }
+
     TVAutoMonitorTimer.start();
-    TVAIAutoLoop.start();
   }
 
   static void stop() {
@@ -26,5 +33,10 @@ class TVSystemRuntimeController {
     TVAutoSystemEvents.stop();
     TVAutoMonitorTimer.stop();
     TVAIAutoLoop.stop();
+  }
+
+  static void restart() {
+    stop();
+    start();
   }
 }
