@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
-class TVDebugPanel
+class TVBackupPanel
     extends StatelessWidget {
-  final bool enabled;
+  final String status;
 
-  const TVDebugPanel({
+  const TVBackupPanel({
     super.key,
-    required this.enabled,
+    required this.status,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 280,
+      width: 320,
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: Colors.black87,
@@ -21,25 +21,19 @@ class TVDebugPanel
       ),
       child: Column(
         children: [
-          Icon(
-            enabled
-                ? Icons.bug_report
-                : Icons.shield,
-            color: enabled
-                ? Colors.orange
-                : Colors.green,
+          const Icon(
+            Icons.backup,
+            color: Colors.cyan,
             size: 42,
           ),
           const SizedBox(height: 16),
           Text(
-            enabled
-                ? 'Debug Mode'
-                : 'Release Mode',
+            status,
             style: const TextStyle(
               color: Colors.white,
               fontWeight:
                   FontWeight.bold,
-              fontSize: 22,
+              fontSize: 20,
             ),
           ),
         ],

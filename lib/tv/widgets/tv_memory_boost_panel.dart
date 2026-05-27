@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 
-class TVDebugPanel
+class TVMemoryBoostPanel
     extends StatelessWidget {
-  final bool enabled;
+  final bool active;
+  final int cleared;
 
-  const TVDebugPanel({
+  const TVMemoryBoostPanel({
     super.key,
-    required this.enabled,
+    required this.active,
+    required this.cleared,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 280,
+      width: 320,
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: Colors.black87,
@@ -22,19 +24,17 @@ class TVDebugPanel
       child: Column(
         children: [
           Icon(
-            enabled
-                ? Icons.bug_report
-                : Icons.shield,
-            color: enabled
-                ? Colors.orange
-                : Colors.green,
+            active
+                ? Icons.memory
+                : Icons.sd_storage,
+            color: active
+                ? Colors.green
+                : Colors.grey,
             size: 42,
           ),
           const SizedBox(height: 16),
           Text(
-            enabled
-                ? 'Debug Mode'
-                : 'Release Mode',
+            '$cleared MB Freed',
             style: const TextStyle(
               color: Colors.white,
               fontWeight:

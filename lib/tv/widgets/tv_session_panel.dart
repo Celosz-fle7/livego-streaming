@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class TVDebugPanel
+class TVSessionPanel
     extends StatelessWidget {
-  final bool enabled;
+  final int launches;
 
-  const TVDebugPanel({
+  const TVSessionPanel({
     super.key,
-    required this.enabled,
+    required this.launches,
   });
 
   @override
@@ -21,20 +21,14 @@ class TVDebugPanel
       ),
       child: Column(
         children: [
-          Icon(
-            enabled
-                ? Icons.bug_report
-                : Icons.shield,
-            color: enabled
-                ? Colors.orange
-                : Colors.green,
+          const Icon(
+            Icons.timer,
+            color: Colors.cyan,
             size: 42,
           ),
           const SizedBox(height: 16),
           Text(
-            enabled
-                ? 'Debug Mode'
-                : 'Release Mode',
+            '$launches Launches',
             style: const TextStyle(
               color: Colors.white,
               fontWeight:

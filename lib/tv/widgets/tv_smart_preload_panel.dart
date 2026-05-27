@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 
-class TVDebugPanel
+class TVSmartPreloadPanel
     extends StatelessWidget {
   final bool enabled;
+  final int items;
 
-  const TVDebugPanel({
+  const TVSmartPreloadPanel({
     super.key,
     required this.enabled,
+    required this.items,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 280,
+      width: 320,
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: Colors.black87,
@@ -23,18 +25,16 @@ class TVDebugPanel
         children: [
           Icon(
             enabled
-                ? Icons.bug_report
-                : Icons.shield,
+                ? Icons.bolt
+                : Icons.bolt_outlined,
             color: enabled
                 ? Colors.orange
-                : Colors.green,
+                : Colors.grey,
             size: 42,
           ),
           const SizedBox(height: 16),
           Text(
-            enabled
-                ? 'Debug Mode'
-                : 'Release Mode',
+            '$items Preloaded',
             style: const TextStyle(
               color: Colors.white,
               fontWeight:

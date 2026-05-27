@@ -2,50 +2,47 @@ import 'package:flutter/material.dart';
 
 class TVNetworkPanel
     extends StatelessWidget {
-  final bool online;
-  final bool metered;
+  final String type;
+  final double speed;
 
   const TVNetworkPanel({
     super.key,
-    required this.online,
-    required this.metered,
+    required this.type,
+    required this.speed,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 280,
-      padding:
-          const EdgeInsets.all(18),
+      width: 320,
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: Colors.black87,
         borderRadius:
             BorderRadius.circular(18),
       ),
       child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
         children: [
+          const Icon(
+            Icons.wifi,
+            color: Colors.green,
+            size: 42,
+          ),
+          const SizedBox(height: 16),
           Text(
-            online
-                ? 'Online'
-                : 'Offline',
-            style: TextStyle(
-              color: online
-                  ? Colors.green
-                  : Colors.red,
+            type,
+            style: const TextStyle(
+              color: Colors.white,
               fontWeight:
                   FontWeight.bold,
-              fontSize: 20,
+              fontSize: 22,
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 10),
           Text(
-            metered
-                ? 'Metered Network'
-                : 'Unlimited Network',
+            '${speed.toStringAsFixed(1)} Mbps',
             style: const TextStyle(
-              color: Colors.white70,
+              color: Colors.white54,
             ),
           ),
         ],

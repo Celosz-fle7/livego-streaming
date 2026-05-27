@@ -1,17 +1,11 @@
 class TVNetworkEngine {
-  static bool online = true;
+  static String type = 'WiFi';
 
-  static bool metered = false;
+  static double speed = 120.0;
 
-  static void offline() {
-    online = false;
-  }
-
-  static void onlineMode() {
-    online = true;
-  }
-
-  static void setMetered(bool value) {
-    metered = value;
+  static void updateSpeed(
+    double value,
+  ) {
+    speed = value;
   }
 }

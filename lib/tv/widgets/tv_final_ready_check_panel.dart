@@ -1,45 +1,44 @@
 import 'package:flutter/material.dart';
 
-class TVDebugPanel
+class TVFinalReadyCheckPanel
     extends StatelessWidget {
-  final bool enabled;
+  final bool ready;
 
-  const TVDebugPanel({
+  const TVFinalReadyCheckPanel({
     super.key,
-    required this.enabled,
+    required this.ready,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 280,
-      padding: const EdgeInsets.all(18),
+      width: 360,
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.black87,
         borderRadius:
-            BorderRadius.circular(18),
+            BorderRadius.circular(20),
       ),
       child: Column(
         children: [
           Icon(
-            enabled
-                ? Icons.bug_report
-                : Icons.shield,
-            color: enabled
-                ? Colors.orange
-                : Colors.green,
-            size: 42,
+            ready
+                ? Icons.verified
+                : Icons.warning,
+            color:
+                ready ? Colors.green : Colors.orange,
+            size: 52,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 18),
           Text(
-            enabled
-                ? 'Debug Mode'
-                : 'Release Mode',
+            ready
+                ? 'SYSTEM READY'
+                : 'CHECK REQUIRED',
             style: const TextStyle(
               color: Colors.white,
               fontWeight:
                   FontWeight.bold,
-              fontSize: 22,
+              fontSize: 26,
             ),
           ),
         ],

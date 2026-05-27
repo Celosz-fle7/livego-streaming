@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class TVDebugPanel
+class TVSafeModePanel
     extends StatelessWidget {
   final bool enabled;
 
-  const TVDebugPanel({
+  const TVSafeModePanel({
     super.key,
     required this.enabled,
   });
@@ -23,18 +23,18 @@ class TVDebugPanel
         children: [
           Icon(
             enabled
-                ? Icons.bug_report
-                : Icons.shield,
+                ? Icons.security
+                : Icons.security_outlined,
             color: enabled
-                ? Colors.orange
+                ? Colors.red
                 : Colors.green,
             size: 42,
           ),
           const SizedBox(height: 16),
           Text(
             enabled
-                ? 'Debug Mode'
-                : 'Release Mode',
+                ? 'Safe Mode'
+                : 'Normal Mode',
             style: const TextStyle(
               color: Colors.white,
               fontWeight:

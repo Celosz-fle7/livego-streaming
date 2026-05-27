@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 
-class TVDebugPanel
+class TVAISubtitlePanel
     extends StatelessWidget {
   final bool enabled;
+  final String language;
 
-  const TVDebugPanel({
+  const TVAISubtitlePanel({
     super.key,
     required this.enabled,
+    required this.language,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 280,
+      width: 320,
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: Colors.black87,
@@ -23,18 +25,16 @@ class TVDebugPanel
         children: [
           Icon(
             enabled
-                ? Icons.bug_report
-                : Icons.shield,
+                ? Icons.subtitles
+                : Icons.subtitles_off,
             color: enabled
-                ? Colors.orange
-                : Colors.green,
+                ? Colors.green
+                : Colors.grey,
             size: 42,
           ),
           const SizedBox(height: 16),
           Text(
-            enabled
-                ? 'Debug Mode'
-                : 'Release Mode',
+            language,
             style: const TextStyle(
               color: Colors.white,
               fontWeight:

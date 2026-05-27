@@ -1,13 +1,13 @@
 class TVPerformanceEngine {
-  static bool lowMemoryMode = false;
+  static int fps = 60;
 
-  static bool lowAnimationMode = false;
+  static double cpu = 22.0;
 
-  static void enableLowMemory() {
-    lowMemoryMode = true;
-  }
+  static double memory = 38.0;
 
-  static void enableLowAnimation() {
-    lowAnimationMode = true;
+  static void updateFPS(
+    int value,
+  ) {
+    fps = value;
   }
 }
