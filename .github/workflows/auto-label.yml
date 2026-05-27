@@ -1,0 +1,19 @@
+name: Auto Label
+
+on:
+  pull_request:
+    branches:
+      - pro-v2
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Add Label
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          labels: |
+            pro-v2
+            stabilization
+            integration
