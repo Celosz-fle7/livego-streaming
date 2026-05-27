@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'home_screen_v2.dart';
+import 'live_tv_screen.dart';
 import 'profile_screen.dart';
 import 'search_screen_v2.dart';
 import 'settings_screen.dart';
@@ -30,6 +31,7 @@ class _TVRootShellState
 
     _pages = const [
       TVHomeScreenV2(),
+      LiveTVScreen(),
       TVSearchScreenV2(),
       TVProfileScreen(),
       TVSettingsScreen(),
