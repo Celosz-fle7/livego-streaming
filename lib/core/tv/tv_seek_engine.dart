@@ -1,10 +1,17 @@
 class TVSeekEngine {
-  static double seek(
-    double current,
-    double delta,
-    double max,
+  static int seekForward = 10;
+
+  static int seekBackward = 10;
+
+  static void setForward(
+    int value,
   ) {
-    return (current + delta)
-        .clamp(0.0, max);
+    seekForward = value;
+  }
+
+  static void setBackward(
+    int value,
+  ) {
+    seekBackward = value;
   }
 }
