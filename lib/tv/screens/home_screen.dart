@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'home_screen_v2.dart';
+import 'tv_root_shell.dart';
 
 class TVHomeScreen extends StatelessWidget {
   const TVHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const TVHomeScreenV2();
+    return const TVRootShell();
   }
 }
