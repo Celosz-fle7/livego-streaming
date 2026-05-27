@@ -6,18 +6,27 @@ import '../core/tv_engine_core.dart';
 import '../health/tv_app_health_engine.dart';
 import '../kernel/tv_safe_app_kernel.dart';
 import '../metrics/tv_live_metrics_engine.dart';
+import '../runtime/live/tv_live_status_controller.dart';
 import '../stability/tv_app_stabilizer.dart';
+import '../widgets/tv_live_runtime_panel.dart';
 import '../widgets/tv_smart_boot_panel.dart';
 import '../widgets/tv_stability_panel.dart';
 import '../widgets/tv_system_diagnostic_panel.dart';
 import '../widgets/tv_system_health_panel.dart';
 import 'tv_universal_panel.dart';
 
-class TVSystemDashboard extends StatelessWidget {
+class TVSystemDashboard extends StatefulWidget {
   const TVSystemDashboard({super.key});
 
   @override
+  State<TVSystemDashboard> createState() => _TVSystemDashboardState();
+}
+
+class _TVSystemDashboardState extends State<TVSystemDashboard> {
+  @override
   Widget build(BuildContext context) {
+    TVLiveStatusController.pulse();
+
     final cacheKeys = TVCacheStats.totalKeys();
 
     return GridView(
@@ -46,6 +55,10 @@ class TVSystemDashboard extends StatelessWidget {
           stable: TVAppStabilizer.stable,
           optimizations: TVAppStabilizer.optimizations,
         ),
+        TVLiveRuntimePanel(
+          online: TVLiveStatusController.online,
+          heartbeat: TVLiveStatusController.heartbeat,
+        ),
         TVUniversalPanel(
           title: 'CACHE KEYS',
           value: '$cacheKeys',
@@ -63,12 +76,6 @@ class TVSystemDashboard extends StatelessWidget {
           value: TVSafeAppKernel.running ? 'RUNNING' : 'IDLE',
           icon: Icons.memory,
           color: Colors.orange,
-        ),
-        TVUniversalPanel(
-          title: 'FEATURES',
-          value: '${TVEngineCore.loadedFeatures}',
-          icon: Icons.extension,
-          color: Colors.purple,
         ),
       ],
     );
