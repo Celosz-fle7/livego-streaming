@@ -1,1 +1,1 @@
-export 'player_screen_old.dart';
+export 'player_screen_v2.dart';
