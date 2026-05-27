@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'screens/booting_screen.dart';
 import 'utils/theme.dart';
-import 'mobile/screens/mobile/screens/player_screen.dart' as mobile;
+import 'mobile/screens/player_screen.dart' as mobile;
 import 'mobile/screens/main_wrapper.dart';
 import 'tv/screens/home_screen.dart';
 import 'tv/screens/mobile/screens/player_screen.dart' as tv;
