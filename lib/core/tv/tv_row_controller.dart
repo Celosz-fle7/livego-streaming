@@ -1,81 +1,81 @@
 import 'package:flutter/material.dart';
-import 'tv_navigation_controller.dart';
 
 class TVRowController {
+  static final Map<String, int> _memory = {};
 
   final String sectionId;
 
-  final ScrollController scrollController;
+  final ScrollController scrollController =
+      ScrollController();
 
-  int focusedIndex = 0;
+  final Map<int, FocusNode> _nodes = {};
 
   TVRowController({
     required this.sectionId,
-  }) : scrollController =
-            TVNavigationController.scroll(
-          sectionId,
-        );
+  });
 
-  // =========================
-  // SET FOCUS
-  // =========================
+  int get lastIndex =>
+      _memory[sectionId] ?? 0;
 
-  void setFocus(
-    int index,
-  ) {
-    focusedIndex = index;
-
-    TVNavigationController.saveIndex(
-      section: sectionId,
-      index: index,
-    );
-
-    TVNavigationController.autoScroll(
-      controller: scrollController,
-      index: index,
-    );
+  void save(int index) {
+    _memory[sectionId] = index;
   }
 
-  // =========================
-  // RESTORE
-  // =========================
+  FocusNode node(
+    int index, {
+    VoidCallback? onFocused,
+  }) {
+    if (_nodes[index] != null) {
+      return _nodes[index]!;
+    }
 
-  void restore() {
-    focusedIndex =
-        TVNavigationController
-            .getLastIndex(
-      sectionId,
-    );
+    final node = FocusNode();
 
-    TVNavigationController.autoScroll(
-      controller: scrollController,
-      index: focusedIndex,
-    );
+    node.addListener(() {
+      if (node.hasFocus) {
+        save(index);
+
+        _autoScroll(index);
+
+        if (onFocused != null) {
+          onFocused();
+        }
+      }
+    });
+
+    _nodes[index] = node;
+
+    return node;
   }
 
-  // =========================
-  // NEXT
-  // =========================
+  void requestLastFocus() {
+    final idx = lastIndex;
 
-  void next(
-    int max,
-  ) {
-    if (focusedIndex < max - 1) {
-      setFocus(
-        focusedIndex + 1,
-      );
+    if (_nodes[idx] != null) {
+      _nodes[idx]!.requestFocus();
     }
   }
 
-  // =========================
-  // PREV
-  // =========================
+  void _autoScroll(int index) {
+    if (!scrollController.hasClients) return;
 
-  void previous() {
-    if (focusedIndex > 0) {
-      setFocus(
-        focusedIndex - 1,
-      );
+    final target =
+        (index * 190).toDouble();
+
+    scrollController.animateTo(
+      target,
+      duration: const Duration(
+        milliseconds: 260,
+      ),
+      curve: Curves.easeOut,
+    );
+  }
+
+  void dispose() {
+    for (final n in _nodes.values) {
+      n.dispose();
     }
+
+    scrollController.dispose();
   }
 }
