@@ -65,9 +65,9 @@ class _TVPlayerScreenState extends State<TVPlayerScreen>
   VideoPlayerController? _controller;
 
   final FocusNode _rootFocusNode = FocusNode(debugLabel: 'tv_player_root');
-  final FocusNode _controlsFocusNode = FocusNode(debugLabel: 'tv_controls');
-  final FocusNode _episodePanelFocusNode =
-      FocusNode(debugLabel: 'tv_episode_panel');
+  final FocusScopeNode _controlsFocusNode = FocusScopeNode(debugLabel: 'tv_controls');
+  final FocusScopeNode _episodePanelFocusNode =
+      FocusScopeNode(debugLabel: 'tv_episode_panel');
 
   final ScrollController _episodeScrollController = ScrollController();
 
