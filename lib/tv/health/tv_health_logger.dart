@@ -9,7 +9,7 @@ class TVHealthLogger {
 
     logs.insert(0, log);
 
-    if (logs.length > 100) {
+    if (logs.length > 25) {
       logs.removeLast();
     }
   }

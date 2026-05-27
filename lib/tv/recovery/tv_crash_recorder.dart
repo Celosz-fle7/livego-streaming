@@ -9,7 +9,7 @@ class TVCrashRecorder {
 
     crashes.insert(0, error);
 
-    if (crashes.length > 100) {
+    if (crashes.length > 25) {
       crashes.removeLast();
     }
   }

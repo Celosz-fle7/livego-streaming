@@ -16,7 +16,7 @@ class TVDebugConsole {
       value,
     );
 
-    if (logs.length > 500) {
+    if (logs.length > 50) {
       logs.removeLast();
     }
   }

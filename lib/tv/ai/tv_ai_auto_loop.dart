@@ -18,7 +18,7 @@ class TVAIAutoLoop {
     running = true;
 
     _timer = Timer.periodic(
-      const Duration(seconds: 6),
+      const Duration(seconds: 20),
       (_) {
 
         TVLiveAIEngine.analyze();

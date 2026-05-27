@@ -11,7 +11,7 @@ class TVDiagnosticEngine {
 
     reports.insert(0, value);
 
-    if (reports.length > 200) {
+    if (reports.length > 30) {
       reports.removeLast();
     }
   }

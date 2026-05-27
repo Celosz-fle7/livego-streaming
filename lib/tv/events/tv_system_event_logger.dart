@@ -9,7 +9,7 @@ class TVSystemEventLogger {
 
     events.insert(0, event);
 
-    if (events.length > 300) {
+    if (events.length > 40) {
       events.removeLast();
     }
   }

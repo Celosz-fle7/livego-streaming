@@ -16,7 +16,7 @@ class TVAutoSystemEvents {
     running = true;
 
     _timer = Timer.periodic(
-      const Duration(seconds: 5),
+      const Duration(seconds: 15),
       (_) {
 
         TVLiveEventStream.emit(

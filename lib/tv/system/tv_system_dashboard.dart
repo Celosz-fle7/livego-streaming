@@ -36,7 +36,7 @@ class _TVSystemDashboardState extends State<TVSystemDashboard> {
     super.initState();
 
     _timer = Timer.periodic(
-      const Duration(seconds: 2),
+      const Duration(seconds: 5),
       (_) {
         TVLiveStatusController.pulse();
         if (mounted) setState(() {});

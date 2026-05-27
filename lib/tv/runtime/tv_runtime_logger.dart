@@ -9,7 +9,7 @@ class TVRuntimeLogger {
 
     logs.insert(0, value);
 
-    if (logs.length > 500) {
+    if (logs.length > 50) {
       logs.removeLast();
     }
   }

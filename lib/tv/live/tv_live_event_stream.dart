@@ -9,7 +9,7 @@ class TVLiveEventStream {
 
     events.insert(0, value);
 
-    if (events.length > 100) {
+    if (events.length > 25) {
       events.removeLast();
     }
   }

@@ -15,7 +15,7 @@ class TVAutoAlertEngine {
       'ALERT: $value',
     );
 
-    if (alerts.length > 100) {
+    if (alerts.length > 25) {
       alerts.removeLast();
     }
   }

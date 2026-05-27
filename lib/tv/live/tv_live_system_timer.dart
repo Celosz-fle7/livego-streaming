@@ -17,7 +17,7 @@ class TVLiveSystemTimer {
     running = true;
 
     _timer = Timer.periodic(
-      const Duration(seconds: 3),
+      const Duration(seconds: 10),
       (_) {
 
         TVLiveStatusEngine.update(

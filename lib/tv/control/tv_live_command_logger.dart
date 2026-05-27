@@ -9,7 +9,7 @@ class TVLiveCommandLogger {
 
     logs.insert(0, command);
 
-    if (logs.length > 300) {
+    if (logs.length > 40) {
       logs.removeLast();
     }
   }

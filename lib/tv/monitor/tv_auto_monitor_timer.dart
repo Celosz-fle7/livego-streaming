@@ -20,7 +20,7 @@ class TVAutoMonitorTimer {
     TVSystemMonitorEngine.start();
 
     _timer = Timer.periodic(
-      const Duration(seconds: 4),
+      const Duration(seconds: 12),
       (_) {
 
         TVSystemMonitorEngine.scan();

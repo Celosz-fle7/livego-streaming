@@ -9,7 +9,7 @@ class TVRenderLogger {
 
     logs.insert(0, value);
 
-    if (logs.length > 300) {
+    if (logs.length > 40) {
       logs.removeLast();
     }
   }

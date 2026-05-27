@@ -9,7 +9,7 @@ class TVRouteLogger {
 
     logs.insert(0, route);
 
-    if (logs.length > 300) {
+    if (logs.length > 40) {
       logs.removeLast();
     }
   }

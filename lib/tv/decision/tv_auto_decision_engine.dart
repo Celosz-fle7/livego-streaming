@@ -15,7 +15,7 @@ class TVAutoDecisionEngine {
       'AI DECISION: $value',
     );
 
-    if (decisions.length > 100) {
+    if (decisions.length > 25) {
       decisions.removeLast();
     }
   }

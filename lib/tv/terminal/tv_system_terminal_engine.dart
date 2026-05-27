@@ -12,7 +12,7 @@ class TVSystemTerminalEngine {
       'EXECUTED: $command',
     );
 
-    if (output.length > 200) {
+    if (output.length > 30) {
       output.removeLast();
     }
   }

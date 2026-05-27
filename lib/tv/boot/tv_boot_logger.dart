@@ -9,7 +9,7 @@ class TVBootLogger {
 
     logs.insert(0, value);
 
-    if (logs.length > 250) {
+    if (logs.length > 40) {
       logs.removeLast();
     }
   }

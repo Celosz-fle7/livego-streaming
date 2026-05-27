@@ -9,7 +9,7 @@ class TVLiveEventLogger {
 
     logs.insert(0, value);
 
-    if (logs.length > 200) {
+    if (logs.length > 30) {
       logs.removeLast();
     }
   }
