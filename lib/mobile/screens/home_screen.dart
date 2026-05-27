@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../api/models/content_item.dart';
 import '../../api/repositories/content_repository.dart';
+import 'detail_screen.dart';
 import '../../api/repositories/watch_history_repository.dart';
 import '../../api/models/watch_history_item.dart';
 
@@ -41,7 +42,14 @@ class _MobileHomeScreenState extends State<MobileHomeScreen> {
 
   Widget _poster(ContentItem item) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => DetailScreen(item: item),
+          ),
+        );
+      },
       child: Container(
         width: 130,
         margin: const EdgeInsets.only(right: 14),
