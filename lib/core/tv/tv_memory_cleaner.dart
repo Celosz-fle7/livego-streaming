@@ -1,8 +1,13 @@
-import 'package:flutter/painting.dart';
-
 class TVMemoryCleaner {
-  static void clearImageCache() {
-    imageCache.clear();
-    imageCache.clearLiveImages();
+  static bool aggressive = false;
+
+  static void enableAggressive() {
+    aggressive = true;
   }
+
+  static void disableAggressive() {
+    aggressive = false;
+  }
+
+  static void clean() {}
 }
