@@ -1,91 +1,78 @@
 import 'package:flutter/foundation.dart';
 
 import '../dracin/dracin_repository.dart';
-import '../models/tv_home_section.dart';
 
-class TVHomeController {
+class TVHomeRail {
+  final String title;
+  final String platform;
+  final List items;
 
-  static Future<List<TVHomeSection>>
-      loadHome() async {
+  const TVHomeRail({
+    required this.title,
+    required this.platform,
+    required this.items,
+  });
+}
 
-    final List<TVHomeSection>
-        sections = [];
+class TVHomeController extends ChangeNotifier {
+  final List<TVHomeRail> rails = [];
+
+  bool loading = false;
+
+  Map<String, dynamic>? hero;
+
+  Future<void> load() async {
+    if (loading) return;
+
+    loading = true;
+    notifyListeners();
 
     try {
-
-      // =========================
-      // FREEREELS
-      // =========================
-
-      final freereels =
-          await DracinRepository
-              .getTrending(
+      final trending =
+          await DracinRepository.getTrending(
         'freereels',
       );
 
-      if (freereels.isNotEmpty) {
-        sections.add(
-          TVHomeSection(
-            id: 'freereels',
-            title: 'FreeReels',
-            items: freereels,
-          ),
-        );
-      }
-
-      // =========================
-      // DRAMAWAVE
-      // =========================
-
-      final dramawave =
-          await DracinRepository
-              .getTrending(
+      final drama =
+          await DracinRepository.getTrending(
         'dramawave',
       );
 
-      if (dramawave.isNotEmpty) {
-        sections.add(
-          TVHomeSection(
-            id: 'dramawave',
-            title: 'DramaWave',
-            items: dramawave,
-          ),
-        );
-      }
-
-      // =========================
-      // REELSHORT
-      // =========================
-
-      final reelshort =
-          await DracinRepository
-              .getTrending(
+      final short =
+          await DracinRepository.getTrending(
         'reelshort',
       );
 
-      if (reelshort.isNotEmpty) {
-        sections.add(
-          TVHomeSection(
-            id: 'reelshort',
-            title: 'ReelShort',
-            items: reelshort,
-          ),
-        );
+      if (trending.isNotEmpty) {
+        hero = trending.first;
       }
 
-      debugPrint(
-        '📺 TV HOME SECTIONS → ${sections.length}',
-      );
+      rails.clear();
 
-      return sections;
-
+      rails.addAll([
+        TVHomeRail(
+          title: '🔥 Trending Indonesia',
+          platform: 'freereels',
+          items: trending,
+        ),
+        TVHomeRail(
+          title: '🎬 DramaWave',
+          platform: 'dramawave',
+          items: drama,
+        ),
+        TVHomeRail(
+          title: '⚡ ReelShort',
+          platform: 'reelshort',
+          items: short,
+        ),
+      ]);
     } catch (e) {
-
       debugPrint(
-        '❌ TV HOME ERROR → $e',
+        'TVHomeController load error: $e',
       );
-
-      return [];
     }
+
+    loading = false;
+    notifyListeners();
   }
 }
