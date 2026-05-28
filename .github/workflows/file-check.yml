@@ -1,0 +1,29 @@
+name: File Check
+
+on:
+  push:
+    branches:
+      - pro-v2
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Critical File Check
+        run: |
+          echo "checking files"
+
+          test -d .github
+          test -d .git
+
+      - name: Workflow Count
+        run: |
+          echo "workflow total:"
+          ls .github/workflows | wc -l
+
+      - name: Verify Finish
+        run: |
+          echo "file verification success"

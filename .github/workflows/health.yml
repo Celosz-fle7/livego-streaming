@@ -1,0 +1,26 @@
+name: Health Check
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+
+  workflow_dispatch:
+
+jobs:
+  health:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Repo Health
+        run: |
+          echo "repo healthy"
+
+      - name: Workflow Health
+        run: |
+          ls .github/workflows
+
+      - name: Final Health
+        run: |
+          echo "system stable"

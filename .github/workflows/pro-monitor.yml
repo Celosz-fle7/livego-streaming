@@ -1,0 +1,37 @@
+name: Pro Monitor
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+
+  workflow_dispatch:
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Branch Monitor
+        run: |
+          echo "branch:"
+          git branch
+
+      - name: Commit Monitor
+        run: |
+          echo "latest commit:"
+          git log --oneline -5
+
+      - name: Workflow Monitor
+        run: |
+          echo "workflow total:"
+          ls .github/workflows | wc -l
+
+      - name: Repo Size
+        run: |
+          du -sh .
+
+      - name: Monitor Finish
+        run: |
+          echo "monitor stable"

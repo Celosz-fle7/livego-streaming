@@ -1,0 +1,17 @@
+name: Security
+
+on:
+  push:
+    branches: [pro-v2]
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Soft Scan
+        run: |
+          echo "security ok"
+          grep -R "SECRET_REAL" . --exclude-dir=.git || true

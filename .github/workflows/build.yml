@@ -1,0 +1,111 @@
+name: Build LiveGO Streaming
+
+env:
+  APP_NAME: "LiveGO Streaming"
+  APP_VERSION: "5.0.0"
+  FLUTTER_VERSION: "3.22.0"
+  JAVA_VERSION: "17"
+  ORG_ID: "com.celoszfle7"
+  PROJECT_NAME: "livego_streaming"
+
+on:
+  push:
+    branches: [main, pro-v2]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout kode
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+
+      - name: Telegram Build Start
+        env:
+          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          MSG="BUILD DIMULAI - ${{ env.APP_NAME }}"
+          curl -s -X POST \
+          "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
+          -d "chat_id=${CHAT_ID}&text=${MSG}" || true
+
+      - name: Recreate Android Project
+        run: |
+
+          mkdir -p backup_data
+
+          cp -r lib backup_data/
+          cp pubspec.yaml backup_data/
+
+          cp -r assets backup_data/ 2>/dev/null || true
+
+          rm -rf android build .gradle
+
+          flutter create --platforms=android --project-name livego_streaming --org com.celoszfle7 .
+
+          cp -r backup_data/lib ./
+          cp backup_data/pubspec.yaml ./
+
+          cp -r backup_data/assets ./ 2>/dev/null || true
+
+      - name: Flutter Clean
+        run: flutter clean
+
+      - name: Install Dependencies
+        run: flutter pub get
+
+      - name: Build APK
+        run: flutter build apk --release
+
+      - name: Rename APK
+        run: |
+          mkdir -p release
+          mv build/app/outputs/flutter-apk/app-release.apk release/LiveGO.apk
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: LiveGO-Release
+          path: release/LiveGO.apk
+
+      - name: Send APK to Telegram
+        if: success()
+        env:
+          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+
+          APK="release/LiveGO.apk"
+
+          curl -s \
+            -F chat_id="${CHAT_ID}" \
+            -F document=@"${APK}" \
+            -F caption="BUILD SUKSES - LiveGO Streaming" \
+            "https://api.telegram.org/bot${BOT_TOKEN}/sendDocument"
+
+      - name: Telegram Failed
+        if: failure()
+        env:
+          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+
+          MSG="BUILD GAGAL - ${{ env.APP_NAME }}"
+
+          curl -s -X POST \
+          "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
+          -d "chat_id=${CHAT_ID}&text=${MSG}" || true

@@ -1,0 +1,22 @@
+name: Stabilize
+
+on:
+  push:
+    branches:
+      - pro-v2
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: List Project
+        run: ls -la
+
+      - name: Check Structure
+        run: |
+          echo "stabilization check"
+          find . -maxdepth 2
