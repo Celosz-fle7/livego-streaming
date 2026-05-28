@@ -1,6 +1,4 @@
-import 'dart:convert';
-import 'api_constants.dart';
-import 'api_service.dart';
+import '../core/dracin/dracin_repository.dart';
 
 class CategoryConfig {
   final String id;
@@ -37,6 +35,15 @@ class AppCategories {
   static const comedy = CategoryConfig(id: 'comedy', name: 'COMEDY');
   static const thriller = CategoryConfig(id: 'thriller', name: 'THRILLER');
   static const dubbing = CategoryConfig(id: 'dubbing', name: 'DUBBING');
+
+  static const defaults = [
+    home,
+    trending,
+    populer,
+    romance,
+    action,
+    dubbing,
+  ];
 }
 
 class Platforms {
@@ -44,50 +51,43 @@ class Platforms {
     id: 'freereels',
     name: 'FreeReels',
     isTvFriendly: true,
+    categories: AppCategories.defaults,
   );
 
   static const dramawave = PlatformConfig(
     id: 'dramawave',
     name: 'DramaWave',
     isTvFriendly: true,
-  );
-
-  static const goodshort = PlatformConfig(
-    id: 'goodshort',
-    name: 'GoodShort',
+    categories: AppCategories.defaults,
   );
 
   static const reelshort = PlatformConfig(
     id: 'reelshort',
     name: 'ReelShort',
     isTvFriendly: true,
+    categories: AppCategories.defaults,
   );
 
   static const shortmax = PlatformConfig(
     id: 'shortmax',
     name: 'ShortMax',
     isTvFriendly: true,
+    categories: AppCategories.defaults,
+  );
+
+  static const goodshort = PlatformConfig(
+    id: 'goodshort',
+    name: 'GoodShort',
+    categories: AppCategories.defaults,
   );
 
   static const allTrending = [
     freereels,
     dramawave,
-    goodshort,
     reelshort,
     shortmax,
+    goodshort,
   ];
-
-  static List<PlatformConfig> get tvPlatforms {
-    return allTrending.where((e) => e.isTvFriendly).toList();
-  }
-
-  static PlatformConfig? findById(String id) {
-    try {
-      return allTrending.firstWhere((e) => e.id == id);
-    } catch (_) {
-      return null;
-    }
-  }
 
   static const defaultMobileHomeIds = [
     'freereels',
@@ -99,57 +99,45 @@ class Platforms {
     'freereels',
     'reelshort',
   ];
+
+  static List<PlatformConfig> get tvPlatforms =>
+      allTrending.where((e) => e.isTvFriendly).toList();
+
+  static PlatformConfig? findById(String id) {
+    try {
+      return allTrending.firstWhere((e) => e.id == id);
+    } catch (_) {
+      return null;
+    }
+  }
 }
 
 class DramaRepository {
-  static const String _defaultLang = 'id';
+  static Future<List<PlatformConfig>> getCategories() async {
+    return Platforms.allTrending;
+  }
 
-  static Future<List<Map<String, dynamic>>> getTrending(
+  static Future<List<dynamic>> getTrending(
     String platform, {
-    int page = 1,
     bool forceRefresh = false,
   }) async {
-    final path =
-        '${ApiConstants.dramas}?platform=$platform&lang=$_defaultLang&page=$page';
-
-    final res = await ApiService.get(
-      path,
-      forceRefresh: forceRefresh,
-    );
-
-    return _extractList(res);
+    return DracinRepository.getTrending(platform);
   }
 
-  static Future<List<Map<String, dynamic>>> getByCategory(
+  static Future<List<dynamic>> getByCategory(
     String platform,
-    String cat, {
-    int page = 1,
+    String category, {
     bool forceRefresh = false,
   }) async {
-    return getTrending(
-      platform,
-      page: page,
-      forceRefresh: forceRefresh,
-    );
+    return DracinRepository.getTrending(platform);
   }
 
-  static Future<List<Map<String, dynamic>>> search(
+  static Future<List<dynamic>> search(
     String platform,
-    String q, {
-    int page = 1,
-    bool forceRefresh = true,
+    String query, {
+    bool forceRefresh = false,
   }) async {
-    final encodedQ = Uri.encodeQueryComponent(q);
-
-    final path =
-        '${ApiConstants.search}?platform=$platform&q=$encodedQ&lang=$_defaultLang&page=$page';
-
-    final res = await ApiService.get(
-      path,
-      forceRefresh: forceRefresh,
-    );
-
-    return _extractList(res);
+    return DracinRepository.search(platform, query);
   }
 
   static Future<Map<String, dynamic>?> getDetail(
@@ -157,85 +145,20 @@ class DramaRepository {
     String platform, {
     bool forceRefresh = false,
   }) async {
-    final encodedId = Uri.encodeQueryComponent(id);
-
-    final path =
-        '${ApiConstants.detail}?id=$encodedId&platform=$platform&lang=$_defaultLang';
-
-    final res = await ApiService.get(
-      path,
-      forceRefresh: forceRefresh,
-    );
-
-    if (res == null) return null;
-
-    final data = res['data'];
-
-    if (data is Map<String, dynamic>) return data;
-
-    return res;
+    return DracinRepository.getDetail(id, platform);
   }
 
   static Future<Map<String, dynamic>?> getVideo(
     String id,
     String platform, {
     int episode = 1,
-    bool forceRefresh = true,
-  }) async {
-    final encodedId = Uri.encodeQueryComponent(id);
-
-    final path =
-        '${ApiConstants.video}?id=$encodedId&platform=$platform&chapter=$episode&lang=$_defaultLang';
-
-    final res = await ApiService.get(
-      path,
-      forceRefresh: forceRefresh,
-    );
-
-    if (res == null) return null;
-
-    final data = res['data'];
-
-    if (data is Map<String, dynamic>) return data;
-
-    return res;
-  }
-
-  static Future<List<Map<String, dynamic>>> getCategories({
+    String? quality,
     bool forceRefresh = false,
   }) async {
-    final res = await ApiService.get(
-      ApiConstants.categories,
-      forceRefresh: forceRefresh,
+    return DracinRepository.getVideo(
+      id: id,
+      platform: platform,
+      episode: episode,
     );
-
-    return _extractList(res);
-  }
-
-  static List<Map<String, dynamic>> _extractList(Map<String, dynamic>? res) {
-    if (res == null) return [];
-
-    final data = res['data'];
-    if (data is List) {
-      return data
-          .whereType<Map>()
-          .map((e) => Map<String, dynamic>.from(e))
-          .toList();
-    }
-
-    final dramas = res['dramas'];
-    if (dramas is List) {
-      return dramas
-          .whereType<Map>()
-          .map((e) => Map<String, dynamic>.from(e))
-          .toList();
-    }
-
-    return [];
-  }
-
-  static String prettyJson(Object? value) {
-    const encoder = JsonEncoder.withIndent('  ');
-    return encoder.convert(value);
   }
 }

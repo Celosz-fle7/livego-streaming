@@ -1,0 +1,28 @@
+name: Log Monitor
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - pro-v2
+
+jobs:
+  logs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Scan Logs
+        run: |
+          echo "checking logs"
+
+          find . -type f -name "*.log" || true
+
+      - name: Disk Usage
+        run: |
+          du -sh .
+
+      - name: Monitor Finish
+        run: |
+          echo "log monitor success"

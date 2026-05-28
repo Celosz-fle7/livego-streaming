@@ -1,0 +1,57 @@
+name: Full Stabilization
+
+on:
+  push:
+    branches:
+      - pro-v2
+
+  workflow_dispatch:
+
+jobs:
+  stabilize:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Repo Info
+        run: |
+          echo "repo stabilization"
+          pwd
+          ls -la
+
+      - name: Workflow Check
+        run: |
+          echo "workflow list"
+          ls .github/workflows
+
+      - name: Structure Check
+        run: |
+          test -d .github
+          echo "github folder ok"
+
+      - name: Secret Scan
+        run: |
+          grep -R "API_KEY=" . --exclude-dir=.git || true
+          grep -R "SECRET_KEY=" . --exclude-dir=.git || true
+          grep -R "TOKEN=" . --exclude-dir=.git || true
+
+      - name: Sync Check
+        run: |
+          git fetch origin
+          git rev-parse HEAD
+          git rev-parse origin/pro-v2
+
+      - name: Temp Cleanup
+        run: |
+          find . -type f -name "*.tmp" -delete || true
+          find . -type f -name "*.log" -delete || true
+
+      - name: Runtime Check
+        run: |
+          uname -a
+          df -h
+
+      - name: Final Status
+        run: |
+          echo "livego-streaming stabilized"

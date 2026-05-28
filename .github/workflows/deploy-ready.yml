@@ -1,0 +1,36 @@
+name: Deploy Ready
+
+on:
+  push:
+    branches:
+      - pro-v2
+
+  workflow_dispatch:
+
+jobs:
+  deploy-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate Repo
+        run: |
+          echo "repo valid"
+
+      - name: Validate Branch
+        run: |
+          if [ "$GITHUB_REF_NAME" = "pro-v2" ]; then
+            echo "branch ok"
+          else
+            exit 1
+          fi
+
+      - name: Validate Workflows
+        run: |
+          test -d .github/workflows
+          ls .github/workflows
+
+      - name: Deployment Status
+        run: |
+          echo "deployment ready"

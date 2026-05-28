@@ -1,0 +1,31 @@
+name: Sync Check
+
+on:
+  push:
+    branches:
+      - pro-v2
+
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch Remote
+        run: |
+          git fetch origin
+
+      - name: Compare Branch
+        run: |
+          echo "local:"
+          git rev-parse HEAD
+
+          echo "remote:"
+          git rev-parse origin/pro-v2
+
+      - name: Sync Status
+        run: |
+          echo "sync verification complete"

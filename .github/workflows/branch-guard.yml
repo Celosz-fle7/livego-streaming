@@ -1,0 +1,26 @@
+name: Branch Guard
+
+on:
+  pull_request:
+    branches:
+      - pro-v2
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate Target
+        run: |
+          echo "target branch: $GITHUB_BASE_REF"
+
+          if [ "$GITHUB_BASE_REF" != "pro-v2" ]; then
+            echo "invalid branch target"
+            exit 1
+          fi
+
+      - name: Guard Success
+        run: |
+          echo "branch protected"

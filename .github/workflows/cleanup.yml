@@ -1,0 +1,20 @@
+name: Cleanup
+
+on:
+  workflow_dispatch:
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Remove Temp
+        run: |
+          find . -type f -name "*.tmp" -delete || true
+          find . -type f -name "*.log" -delete || true
+
+      - name: Cleanup Cache
+        run: |
+          echo "cleanup complete"

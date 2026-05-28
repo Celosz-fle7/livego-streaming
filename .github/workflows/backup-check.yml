@@ -1,0 +1,28 @@
+name: Backup Check
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */6 * * *"
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Repo Snapshot
+        run: |
+          mkdir -p backup
+          git ls-files > backup/files.txt
+
+      - name: Verify Snapshot
+        run: |
+          test -f backup/files.txt
+          echo "backup snapshot ok"
+
+      - name: Finish
+        run: |
+          echo "backup check success"
+

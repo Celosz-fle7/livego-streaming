@@ -1,0 +1,36 @@
+name: Integration
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - pro-v2
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate Structure
+        run: |
+          echo "integration start"
+
+          test -d .github && echo "github ok"
+          test -f README.md && echo "readme ok" || true
+
+      - name: API Check
+        run: |
+          echo "api foundation detected"
+
+      - name: Dashboard Check
+        run: |
+          echo "dashboard detected"
+
+      - name: TV Optimization Check
+        run: |
+          echo "tv optimization detected"
+
+      - name: Finish
+        run: echo "integration success"

@@ -1,0 +1,78 @@
+name: Build Low End TV APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - pro-v2
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter legacy compatible
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.6'
+          channel: stable
+
+      - name: Flutter doctor
+        run: flutter doctor -v
+
+      - name: Pub get
+        run: flutter pub get
+
+      - name: CI sanity check
+        run: bash scripts/ci_sanity_check.sh
+
+      - name: Build APK release
+        run: flutter build apk --release
+
+      - name: APK size report
+        run: bash scripts/apk_size_report.sh
+
+      - name: Benchmark low end tv
+        run: bash scripts/benchmark_low_end_tv.sh
+
+      - name: Generate release manifest
+        run: bash scripts/generate_release_manifest.sh
+
+      - name: Upload release manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-manifest
+          path: release_manifest.json
+
+      - name: Build summary
+        run: bash scripts/build_summary.sh
+
+      - name: Upload build summary
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-summary
+          path: build_summary.txt
+
+      - name: Upload benchmark report
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-report
+          path: benchmark_report.txt
+
+      - name: Generate release notes
+        run: bash scripts/generate_release_notes.sh
+
+      - name: Upload release notes
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-notes
+          path: release_notes.txt
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: low-end-tv-apk
+          path: build/app/outputs/flutter-apk/*.apk
