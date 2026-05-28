@@ -78,7 +78,7 @@ class LiveGOApp extends StatelessWidget {
           return _fade(
             RepaintBoundary(
               child: mobile.PlayerScreen(
-                source: args['source'] ?? '',
+                streamUrl: args['source'] ?? '',
                 title: args['title'] ?? '',
               ),
             ),
@@ -95,8 +95,8 @@ class LiveGOApp extends StatelessWidget {
         final args = settings.arguments as Map<String, String>?;
         if (args != null) {
           return _fade(
-            tv.TVPlayerScreen(
-              source: args['source'] ?? '',
+            tv.TVPlayerScreen(id: args['id'] ?? '',
+              streamUrl: args['source'] ?? '',
               title: args['title'] ?? '',
             ),
             settings,
